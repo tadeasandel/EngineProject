@@ -14,10 +14,9 @@ workspace "DressDown"
 
       includedirs
       {
-        -- this glad is not used prolly
-        --"glad",
         "glfw-3.3.2.bin.WIN64/lib-vc2019",
-        "glfw-3.3.2.bin.WIN64/include"
+        "glfw-3.3.2.bin.WIN64/include",
+        "glad/src"
       }
 
       filter {"configurations:Debug"}

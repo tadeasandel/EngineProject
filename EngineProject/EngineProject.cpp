@@ -51,16 +51,16 @@ int main()
 	// When the window size is changed, the screen scale changes accordingly
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-	// TODO - Understand this :D
 	// tho it might not be that relevant, just an INIT To the GLAD tool we use
-	// glad: load all OpenGL function pointers
-	// ---------------------------------------
+	// GLAD is a set of delegates
+	// glwGetProcAdress - gets adress of the process (PID) of the window process
+	// OpenGL sourcode is not accessable except for the runtime, which this call gains
+	// Binds all delegates in GLAD to the code
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
 		std::cout << "Failed to initialize GLAD" << std::endl;
 		return -1;
 	}
-
 
 	// build and compile shader program
 
@@ -159,12 +159,12 @@ int main()
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
 	// Tells the OpenGL how it should interpret the buffers when drawing
-	// Index of the vertex Attribute
+	// Layout number (using kinda C# attributes)
 	// Number of components per vertex attribute, can be 1,2,3,4
 	// Data Type
 	// bool - Clamp from -1 to 1 (0 to 1 for unsigned)?
 	// Stride - byte offset between each vertexes, basically how much memory size will 3 vertex points take?
-	// pointer - offset of the first component, where it should start (I think)
+	// pointer - offset of the first component, where it should start
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 
 	// Enables the vertex attribute to be enabled
