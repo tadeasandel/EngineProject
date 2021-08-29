@@ -1,31 +1,16 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include "Shader.h"
 
 #include <iostream>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void processInput(GLFWwindow *window);
+void processInput(GLFWwindow* window);
 
 // Default Screen Setup
 const unsigned short SCR_WIDTH = 800;
 const unsigned short SCR_HEIGHT = 800;
 const char* SCREEN_NAME = "LearnOpenGL";
-
-// TODO - move this into a separate file, so that it's not retarded string code
-const char *vertexShaderSource = "#version 330 core\n"
-"layout (location = 0) in vec3 aPos;\n"
-"void main()\n"
-"{\n"
-"   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-"}\0";
-
-// TODO - move this into a separate file, so that it's not retarded string code
-const char *fragmentShaderSource = "#version 330 core\n"
-"out vec4 FragColor;\n"
-"void main()\n"
-"{\n"
-"   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
-"}\n\0";
 
 int main()
 {
@@ -54,7 +39,7 @@ int main()
 	// tho it might not be that relevant, just an INIT To the GLAD tool we use
 	// GLAD is a set of delegates
 	// glwGetProcAdress - gets adress of the process (PID) of the window process
-	// OpenGL sourcode is not accessable except for the runtime, which this call gains
+	// OpenGL source code is not accessable except for the runtime, which this call gains
 	// Binds all delegates in GLAD to the code
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
@@ -62,6 +47,7 @@ int main()
 		return -1;
 	}
 
+	/*
 	// build and compile shader program
 
 	// vertex shader
@@ -73,6 +59,16 @@ int main()
 	glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
 	glCompileShader(vertexShader);
 
+	// check for shader compile errors
+	int success;
+	char infoLog[512];
+	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+	if (!success)
+	{
+		glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+	}
+
 	// fragment shader
 	int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 	// vertexShader - shader object created
@@ -82,6 +78,14 @@ int main()
 	glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
 	glCompileShader(fragmentShader);
 
+	// check for shader compile errors
+	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
+	if (!success)
+	{
+		glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
+		std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
+	}
+
 	// Create Shader Program and Attach both Vertex and Fragment shaders created to it
 	int shaderProgram = glCreateProgram();
 	glAttachShader(shaderProgram, vertexShader);
@@ -89,23 +93,25 @@ int main()
 	// Links all attached shaders into one final shader program object
 	glLinkProgram(shaderProgram);
 
-	// Shaders are now inside the shaderProgram, so we cna delete them
+	// Shaders are now inside the shaderProgram, so we can delete them
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
+	*/
+	Shader currentShader("VertexShader.vert", "FragmentShader.frag");
 
 	// This array contains positions of vertices (will contain also colors eventually)
 	float vertices[] = {
-
-		 0.5f,  0.5f,  0.0f,  // top right
-		 0.5f, -0.5f,  0.0f,  // bottom right
-		-0.5f, -0.5f,  0.0f,  // bottom left
-		-0.5f,  0.5f,  0.0f   // top left 
+		//	[     positions     ] [      colors      ]
+			 0.5f, -0.5f,  0.0f,    1.0f, 0.0f, 0.0f, // top right
+			-0.5f, -0.5f,  0.0f,    0.0f, 1.0f, 0.0f, // bottom right
+			 0.0f,  0.5f,  0.0f,    0.0f, 0.0f, 1.0f  // bottom left
+			//-0.5f,  0.5f,  0.0f   // top left 
 	};
 
 	// Instructions to what numbers are used for each vertice from the vertices array
 	unsigned int indices[] = {  // note that we start from 0!
-		0, 1, 3,  // first Triangle
-		1, 2, 3   // second Triangle
+		0, 1, 2,  // first Triangle
+		//1, 2, 3  // second Triangle
 	};
 
 	// Vertex Array Object
@@ -132,7 +138,7 @@ int main()
 	// &EBO - the ID of the generated buffer
 	glGenBuffers(1, &EBO);
 
-	// Binds VAO, the following Attrib calls will be stored in this currently bound VAO
+	// Binds VAO, the following Attribute calls will be stored in this currently bound VAO
 	glBindVertexArray(VAO);
 
 	// Binds the buffer to the ID
@@ -158,18 +164,31 @@ int main()
 	// Draw pattern
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-	// Tells the OpenGL how it should interpret the buffers when drawing
+	// Tells the OpenGL how it should interpret the POSITION buffers when drawing
 	// Layout number (using kinda C# attributes)
 	// Number of components per vertex attribute, can be 1,2,3,4
 	// Data Type
 	// bool - Clamp from -1 to 1 (0 to 1 for unsigned)?
 	// Stride - byte offset between each vertexes, basically how much memory size will 3 vertex points take?
 	// pointer - offset of the first component, where it should start
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
 
 	// Enables the vertex attribute to be enabled
 	// Index of the vertex Attribute
 	glEnableVertexAttribArray(0);
+
+	// Tells the OpenGL how it should interpret the COLOR buffers when drawing
+	// Layout number (using kinda C# attributes)
+	// Number of components per vertex attribute, can be 1,2,3,4
+	// Data Type
+	// bool - Clamp from -1 to 1 (0 to 1 for unsigned)?
+	// Stride - byte offset between each vertexes, basically how much memory size will 3 vertex points take?
+	// pointer - offset of the first component, where it should start in memory size
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+
+	// Enables the vertex attribute to be enabled
+	// Index of the vertex Attribute
+	glEnableVertexAttribArray(1);
 
 	// Binds the buffer to the ID we have just created
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -189,8 +208,7 @@ int main()
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		// Draws the program with the ID
-		glUseProgram(shaderProgram);
+		currentShader.Use();
 
 		// seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
 		glBindVertexArray(VAO);
@@ -208,8 +226,8 @@ int main()
 	// de-allocate all resources once they've outlived their purpose:
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);
-	glDeleteBuffers(1, &EBO);
-	glDeleteProgram(shaderProgram);
+	//glDeleteBuffers(1, &EBO);
+	//glDeleteProgram(shaderProgram);
 
 	// glfw: terminate, clearing all previously allocated GLFW resources.
 	glfwTerminate();
@@ -217,7 +235,7 @@ int main()
 }
 
 // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
-void processInput(GLFWwindow *window)
+void processInput(GLFWwindow* window)
 {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);

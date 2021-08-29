@@ -7,9 +7,9 @@ workspace "DressDown"
 
       files 
       {
-        "EngineProject/**.h",
-        "EngineProject/**.cpp",
-        "EngineProject/**.c",
+        "**.h",
+        "**.cpp",
+        "**.c",
       }
 
       includedirs
