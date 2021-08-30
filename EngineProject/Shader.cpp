@@ -18,9 +18,12 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath)
 
 unsigned int Shader::CreateAndLinkProgram(const unsigned int& vertexID, const unsigned int& fragmentID)
 {
+	// Create Shader Program and Attach both Vertex and Fragment shaders created to it
 	unsigned int programID = glCreateProgram();
 	glAttachShader(programID, vertexID);
 	glAttachShader(programID, fragmentID);
+
+	// Links all attached shaders into one final shader program object
 	glLinkProgram(programID);
 	CheckProgramErrors(programID);
 
@@ -29,8 +32,14 @@ unsigned int Shader::CreateAndLinkProgram(const unsigned int& vertexID, const un
 
 unsigned int Shader::CreateAndCompileShader(const char* shaderCode, GLenum shaderType) const
 {
-	// vertex shader
+	// Shader Creation
 	unsigned int shaderID = glCreateShader(shaderType);
+
+	// Add Shader Code and Compile
+	// 1 - ID of the shader created
+	// 2 - how many shader strings we're passing to the source code
+	// 3 - source code of the shader
+	// 4 - length
 	glShaderSource(shaderID, 1, &shaderCode, NULL);
 	glCompileShader(shaderID);
 	CheckShaderErrors(shaderID);

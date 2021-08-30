@@ -47,56 +47,6 @@ int main()
 		return -1;
 	}
 
-	/*
-	// build and compile shader program
-
-	// vertex shader
-	int vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	// vertexShader - shader object created
-	// 1 - how many strings we're passing to the source code
-	// vertexShaderSource - source code
-	// NULL - length
-	glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-	glCompileShader(vertexShader);
-
-	// check for shader compile errors
-	int success;
-	char infoLog[512];
-	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-	if (!success)
-	{
-		glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
-	}
-
-	// fragment shader
-	int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	// vertexShader - shader object created
-	// 1 - how many strings we're passing to the source code
-	// vertexShaderSource - source code
-	// NULL - length
-	glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-	glCompileShader(fragmentShader);
-
-	// check for shader compile errors
-	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-	if (!success)
-	{
-		glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
-	}
-
-	// Create Shader Program and Attach both Vertex and Fragment shaders created to it
-	int shaderProgram = glCreateProgram();
-	glAttachShader(shaderProgram, vertexShader);
-	glAttachShader(shaderProgram, fragmentShader);
-	// Links all attached shaders into one final shader program object
-	glLinkProgram(shaderProgram);
-
-	// Shaders are now inside the shaderProgram, so we can delete them
-	glDeleteShader(vertexShader);
-	glDeleteShader(fragmentShader);
-	*/
 	Shader currentShader("EngineProject/VertexShader.vert", "EngineProject/FragmentShader.frag");
 
 	// This array contains positions of vertices (will contain also colors eventually)
