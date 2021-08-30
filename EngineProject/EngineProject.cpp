@@ -97,7 +97,7 @@ int main()
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
 	*/
-	Shader currentShader("VertexShader.vert", "FragmentShader.frag");
+	Shader currentShader("EngineProject/VertexShader.vert", "EngineProject/FragmentShader.frag");
 
 	// This array contains positions of vertices (will contain also colors eventually)
 	float vertices[] = {

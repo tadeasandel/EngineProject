@@ -7,7 +7,7 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath)
 	const char* fragmentShaderCode = LoadShaderFromFile(fragmentPath);
 
 	unsigned int vertexID = CreateAndCompileShader(vertexShaderCode, GL_VERTEX_SHADER);
-	unsigned int fragmentID = CreateAndCompileShader(vertexShaderCode, GL_FRAGMENT_SHADER);
+	unsigned int fragmentID = CreateAndCompileShader(fragmentShaderCode, GL_FRAGMENT_SHADER);
 
 	ID = CreateAndLinkProgram(vertexID, fragmentID);
 
